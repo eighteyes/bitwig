@@ -21,7 +21,8 @@ var cc = {};
 // [ channel (hex), cc# (int)]
 cc[0xb0] = {
   //knob
-  updown: [ 14, [ panelUp, panelDown ] ],
+  updown: [ 14, [ arrowUp, arrowDown ] ],
+  leftright: [ 15, [ arrowLeft, arrowRight ] ],
 
   //buttons
   metro: [ 46, tMetro ],
