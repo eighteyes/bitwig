@@ -133,6 +133,7 @@
         <reaction>ondown</reaction>
       </button>
       <button id="Loop">
+        <name>Restart</name>
         <controller>104</controller>
         <channel>0</channel>
         <off>0</off>
@@ -157,6 +158,7 @@
         <reaction>ondown</reaction>
       </button>
       <button id="Next">
+        <name>FastFoward</name>
         <controller>106</controller>
         <channel>0</channel>
         <off>0</off>
@@ -173,6 +175,7 @@
         <reaction>ondown</reaction>
       </button>
       <button id="Play">
+        <name>Play</name>
         <controller>108</controller>
         <channel>0</channel>
         <off>0</off>
@@ -181,6 +184,7 @@
         <reaction>ondown</reaction>
       </button>
       <button id="Prev.">
+        <name>Rewind</name>
         <controller>105</controller>
         <channel>0</channel>
         <off>0</off>
@@ -189,6 +193,7 @@
         <reaction>ondown</reaction>
       </button>
       <button id="Record">
+        <name>Rec</name>
         <controller>109</controller>
         <channel>0</channel>
         <off>0</off>
@@ -351,23 +356,25 @@
           <reaction>ondown</reaction>
         </button>
         <knob id="Knob1">
-          <controller>14</controller>
+          <name>UpDown</name>
+          <controller mode="comp">14</controller>
           <channel>0</channel>
           <min>0</min>
           <max>127</max>
           <default>0</default>
           <range>360</range>
-          <steps>20</steps>
+          <steps>100</steps>
           <bipolar>off</bipolar>
         </knob>
         <knob id="Knob2">
-          <controller>15</controller>
+          <name>LeftRight</name>
+          <controller mode="comp">15</controller>
           <channel>0</channel>
           <min>0</min>
           <max>127</max>
           <default>0</default>
           <range>360</range>
-          <steps>20</steps>
+          <steps>100</steps>
           <bipolar>off</bipolar>
         </knob>
         <knob id="Knob3">
@@ -433,6 +440,7 @@
       </page>
       <page name="Recording 2">
         <button id="Button1">
+          <name>gDub</name>
           <controller>54</controller>
           <channel>0</channel>
           <off>0</off>
@@ -441,6 +449,7 @@
           <reaction>ondown</reaction>
         </button>
         <button id="Button2">
+          <name>gAuto</name>
           <controller>55</controller>
           <channel>0</channel>
           <off>0</off>
@@ -449,6 +458,7 @@
           <reaction>ondown</reaction>
         </button>
         <button id="Button3">
+          <name>gAutoWrite</name>
           <controller>56</controller>
           <channel>0</channel>
           <off>0</off>
@@ -465,6 +475,7 @@
           <reaction>ondown</reaction>
         </button>
         <button id="Button5">
+          <name>lDub</name>
           <controller>58</controller>
           <channel>0</channel>
           <off>0</off>
@@ -473,6 +484,7 @@
           <reaction>ondown</reaction>
         </button>
         <button id="Button6">
+          <name>lAuto</name>
           <controller>59</controller>
           <channel>0</channel>
           <off>0</off>
@@ -728,7 +740,7 @@
       <current_index>7</current_index>
       <group name="Drum">
         <pad id="Pad1" subtype="trigger">
-          <note>12</note>
+          <note>36</note>
           <channel>0</channel>
           <min>0</min>
           <max>127</max>
@@ -737,7 +749,7 @@
           <reaction>ondown</reaction>
         </pad>
         <pad id="Pad10" subtype="trigger">
-          <note>21</note>
+          <note>45</note>
           <channel>0</channel>
           <min>0</min>
           <max>127</max>
@@ -746,7 +758,7 @@
           <reaction>ondown</reaction>
         </pad>
         <pad id="Pad11" subtype="trigger">
-          <note>22</note>
+          <note>46</note>
           <channel>0</channel>
           <min>0</min>
           <max>127</max>
@@ -755,7 +767,7 @@
           <reaction>ondown</reaction>
         </pad>
         <pad id="Pad12" subtype="trigger">
-          <note>23</note>
+          <note>47</note>
           <channel>0</channel>
           <min>0</min>
           <max>127</max>
@@ -764,7 +776,7 @@
           <reaction>ondown</reaction>
         </pad>
         <pad id="Pad13" subtype="trigger">
-          <note>24</note>
+          <note>48</note>
           <channel>0</channel>
           <min>0</min>
           <max>127</max>
@@ -773,7 +785,7 @@
           <reaction>ondown</reaction>
         </pad>
         <pad id="Pad14" subtype="trigger">
-          <note>25</note>
+          <note>49</note>
           <channel>0</channel>
           <min>0</min>
           <max>127</max>
@@ -782,7 +794,7 @@
           <reaction>ondown</reaction>
         </pad>
         <pad id="Pad15" subtype="trigger">
-          <note>26</note>
+          <note>50</note>
           <channel>0</channel>
           <min>0</min>
           <max>127</max>
@@ -791,7 +803,7 @@
           <reaction>ondown</reaction>
         </pad>
         <pad id="Pad16" subtype="trigger">
-          <note>27</note>
+          <note>51</note>
           <channel>0</channel>
           <min>0</min>
           <max>127</max>
@@ -800,7 +812,7 @@
           <reaction>ondown</reaction>
         </pad>
         <pad id="Pad2" subtype="trigger">
-          <note>13</note>
+          <note>37</note>
           <channel>0</channel>
           <min>0</min>
           <max>127</max>
@@ -809,7 +821,7 @@
           <reaction>ondown</reaction>
         </pad>
         <pad id="Pad3" subtype="trigger">
-          <note>14</note>
+          <note>38</note>
           <channel>0</channel>
           <min>0</min>
           <max>127</max>
@@ -818,7 +830,7 @@
           <reaction>ondown</reaction>
         </pad>
         <pad id="Pad4" subtype="trigger">
-          <note>15</note>
+          <note>39</note>
           <channel>0</channel>
           <min>0</min>
           <max>127</max>
@@ -827,7 +839,7 @@
           <reaction>ondown</reaction>
         </pad>
         <pad id="Pad5" subtype="trigger">
-          <note>16</note>
+          <note>40</note>
           <channel>0</channel>
           <min>0</min>
           <max>127</max>
@@ -836,7 +848,7 @@
           <reaction>ondown</reaction>
         </pad>
         <pad id="Pad6" subtype="trigger">
-          <note>17</note>
+          <note>41</note>
           <channel>0</channel>
           <min>0</min>
           <max>127</max>
@@ -845,7 +857,7 @@
           <reaction>ondown</reaction>
         </pad>
         <pad id="Pad7" subtype="trigger">
-          <note>18</note>
+          <note>42</note>
           <channel>0</channel>
           <min>0</min>
           <max>127</max>
@@ -854,7 +866,7 @@
           <reaction>ondown</reaction>
         </pad>
         <pad id="Pad8" subtype="trigger">
-          <note>19</note>
+          <note>43</note>
           <channel>0</channel>
           <min>0</min>
           <max>127</max>
@@ -863,7 +875,7 @@
           <reaction>ondown</reaction>
         </pad>
         <pad id="Pad9" subtype="trigger">
-          <note>20</note>
+          <note>44</note>
           <channel>0</channel>
           <min>0</min>
           <max>127</max>
@@ -2543,6 +2555,7 @@
           <reaction>ondown</reaction>
         </pad>
         <pad id="Pad10" subtype="trigger">
+          <name>P:down</name>
           <controller>75</controller>
           <channel>0</channel>
           <min>0</min>
@@ -2552,6 +2565,7 @@
           <reaction>ondown</reaction>
         </pad>
         <pad id="Pad11" subtype="trigger">
+          <name>P;Up</name>
           <controller>76</controller>
           <channel>0</channel>
           <min>0</min>
@@ -2570,6 +2584,7 @@
           <reaction>ondown</reaction>
         </pad>
         <pad id="Pad13" subtype="trigger">
+          <name>Left</name>
           <controller>78</controller>
           <channel>0</channel>
           <min>0</min>
@@ -2579,6 +2594,7 @@
           <reaction>ondown</reaction>
         </pad>
         <pad id="Pad14" subtype="trigger">
+          <name>Down</name>
           <controller>79</controller>
           <channel>0</channel>
           <min>0</min>
@@ -2588,6 +2604,7 @@
           <reaction>ondown</reaction>
         </pad>
         <pad id="Pad15" subtype="trigger">
+          <name>Up</name>
           <controller>80</controller>
           <channel>0</channel>
           <min>0</min>
@@ -2597,6 +2614,7 @@
           <reaction>ondown</reaction>
         </pad>
         <pad id="Pad16" subtype="trigger">
+          <name>Right</name>
           <controller>81</controller>
           <channel>0</channel>
           <min>0</min>
@@ -2606,6 +2624,7 @@
           <reaction>ondown</reaction>
         </pad>
         <pad id="Pad2" subtype="trigger">
+          <name>Copy</name>
           <controller>67</controller>
           <channel>0</channel>
           <min>0</min>
@@ -2615,6 +2634,7 @@
           <reaction>ondown</reaction>
         </pad>
         <pad id="Pad3" subtype="trigger">
+          <name>Paste</name>
           <controller>68</controller>
           <channel>0</channel>
           <min>0</min>
@@ -2624,6 +2644,7 @@
           <reaction>ondown</reaction>
         </pad>
         <pad id="Pad4" subtype="trigger">
+          <name>Enter</name>
           <controller>69</controller>
           <channel>0</channel>
           <min>0</min>
@@ -2633,6 +2654,7 @@
           <reaction>ondown</reaction>
         </pad>
         <pad id="Pad5" subtype="trigger">
+          <name>Rename</name>
           <controller>70</controller>
           <channel>0</channel>
           <min>0</min>
@@ -2642,6 +2664,7 @@
           <reaction>ondown</reaction>
         </pad>
         <pad id="Pad6" subtype="trigger">
+          <name>Dupe</name>
           <controller>71</controller>
           <channel>0</channel>
           <min>0</min>
@@ -2651,6 +2674,7 @@
           <reaction>ondown</reaction>
         </pad>
         <pad id="Pad7" subtype="trigger">
+          <name>Browse</name>
           <controller>72</controller>
           <channel>0</channel>
           <min>0</min>
@@ -2660,6 +2684,7 @@
           <reaction>ondown</reaction>
         </pad>
         <pad id="Pad8" subtype="trigger">
+          <name>Exit</name>
           <controller>73</controller>
           <channel>0</channel>
           <min>0</min>
