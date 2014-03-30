@@ -1,5 +1,6 @@
 var controls, application, transport;
 loadAPI(1);
+load('utils.js');
 
 host.defineController("Generic", "Maschine Midi", "1.0", "E18947B2-AD95-4CA1-9C40-C66DB269A9BA");
 host.defineMidiPorts(1, 1);
@@ -14,40 +15,92 @@ var ranges = {
   highPad: 81
 };
 
+var cc = {};
+// load('obs.js');
 
 // [ channel (hex), cc# (int)]
-var cc = {
-  metro: [0xB0, 46, tMetro ],
-  loop: [0xB0, 47, tLoop ],
-  pin: [0xB0, 48, tPunchIn ],
-  pout: [0xB0, 49, tPunchOut ],
-  view: [0xB0, 50, tView ],
-  automation: [0xB0, 51, tAutoEditor ],
-  editor: [0xB0, 52, tNoteEditor ],
-  mixer: [0xB0, 53, tMixer ],
+cc[0xb0] = {
+  //knob
+  updown: [ 14, [ panelUp, panelDown ] ],
+
+  //buttons
+  metro: [ 46, tMetro ],
+  loop: [ 47, tLoop ],
+  pin: [ 48, tPunchIn ],
+  pout: [ 49, tPunchOut ],
+  view: [ 50, tView ],
+  automation: [ 51, tAutoEditor ],
+  editor: [ 52, tNoteEditor ],
+  mixer: [ 53, tMixer ],
+
+  gDub: [ 54, tGlobalOverdub],
+  gWrite: [ 55, tGlobalAutoWrite],
+  gLatch: [56, tGlobalAutoLatch],
+
+  lDub: [ 58, tLaunchOverdub],
+  lAuto: [ 59, tLaunchAuto],
+  //pads
   arrow: {
-    left: [ 0xB0, 78, arrowLeft ],
-    down: [ 0xB0, 79, arrowDown ],
-    up: [ 0xB0,  80, arrowUp ],
-    right: [ 0xB0, 81, arrowRight ]
+    left: [ 78, arrowLeft ],
+    down: [ 79, arrowDown ],
+    up: [  80, arrowUp ],
+    right: [ 81, arrowRight ]
   },
   panel: {
-    left: [ 0xB0, 74, panelLeft ],
-    down: [ 0xB0, 75, panelDown ],
-    up: [ 0xB0,  76, panelUp ],
-    right: [ 0xB0, 77, panelRight ]
+    left: [ 74, panelLeft ],
+    down: [ 75, panelDown ],
+    up: [  76, panelUp ],
+    right: [ 77, panelRight ]
   },
   meta: {
-    cut: [ 0xb0, 66, doCut ],
-    copy: [ 0xb0, 67, doCopy ],
-    paste: [ 0xb0, 68, doPaste ],
-    enter: [ 0xB0, 69, doEnter ],
-    rename: [ 0xb0, 70, doRename ],
-    duplicate: [ 0xb0, 71, doDuplicate ],
-    browse: [ 0xb0, 72, tBrowse ],
-    exit: [ 0xb0, 73, doExit ]
+    cut: [ 66, doCut ],
+    copy: [ 67, doCopy ],
+    paste: [ 68, doPaste ],
+    enter: [ 69, doEnter ],
+    rename: [ 70, doRename ],
+    duplicate: [ 71, doDuplicate ],
+    browse: [ 72, tBrowse ],
+    exit: [ 73, doExit ]
+  },
+  transport: {
+    restart: [ 104, restart],
+    rewind: [105, rewind ],
+    ff: [106, ff ],
+    play: [ 108, play ],
+    rec: [ 109, rec]
   }
 };
+
+// cc[0xB0][14] = [tMetro=, 'metro']
+var ccs = translateCCObj(cc);
+log(ccs[0xb0]);
+
+function translateCCObj( obj ){
+  var ts = Object.prototype.toString;
+  var entity, type, retObj = {};
+  //cycle through channels
+  for (var c in obj){
+    var array = [];
+    //cycle through commands
+    for ( var i in obj[c] ){
+      // "A" - array, "O" - object
+      type = ts.call(obj[c][i])[8];
+      entity = obj[c][i];
+      // handle nested
+      if (type == "O"){
+        for (var j in entity){
+          control = entity[j][0];
+          array[control] = [ entity[j][1], i+":"+j ];
+        }
+      } else if (type == "A"){
+        control = entity[0];
+        array[control] = [ entity[1], i ]
+      }
+    }
+    retObj[c] = array;
+  }
+  return retObj;
+}
 
 function doRename() { application.rename(); }
 function doCopy(){ application.copy(); }
@@ -73,6 +126,17 @@ function panelUp () { application.focusPanelAbove(); }
 function panelDown () { application.focusPanelBelow(); }
 function panelLeft () { application.focusPanelToLeft(); }
 function panelRight () { application.focusPanelToRight(); }
+function tLaunchOverdub() { transport.toggleLauncherOverdub();}
+function tLaunchAuto() { transport.toggleWriteClipLauncherAutomation();}
+function tGlobalOverdub() { transport.toggleOverdub();}
+function tGlobalAutoWrite() { transport.toggleWriteArrangerAutomation();}
+function tGlobalAutoLatch() { transport.toggleLatchAutomationWriteMode();}
+function tGlobalAutoTouch() { transport.setAutomationWriteMote('touch');}
+function play() { transport.play(); }
+function ff() { transport.fastForward(); }
+function restart() { transport.restart(); }
+function rewind() { transport.rewind(); }
+function rec() { transport.record(); }
 
 function setupMidiIn(onMidi, onSysex) {
   host.getMidiInPort(0).setMidiCallback(onMidi);
@@ -81,17 +145,6 @@ function setupMidiIn(onMidi, onSysex) {
   host.getMidiInPort(0).createNoteInput('Maschine Pad Midi');
 }
 
-function spy(obj){
-  for (var j = 0, l = arguments.length; j < l; j++) {
-  var a = [];
-    log('=== ' + arguments[j] + ' ===');
-
-    for (var i in arguments[j]) {
-      a.push(i)
-    }
-  log(a);
-  }
-}
 
 function init() {
   setupMidiIn(onMidi, onSysex);
@@ -99,66 +152,45 @@ function init() {
   controls = host.createUserControls(8);
   application = host.createApplication();
   transport = host.createTransport();
-
-  log(controls, application, transport);
-  spy(host, controls, application, transport);
+//
+  // log(controls, application, transport);
+  // spy(host, controls, application, transport);
 }
 
 
 function onMidi(status, data1, data2) {
-  var msg = '';
+  var fun, msg = '';
+   printMidi(status, data1, data2);
 
-  if ( isNoteOn(status) || isAfterTouch(status) ) {
+  if ( isNoteOn(status) || isKeyPressure(status) ) {
     // note
     msg += 'Note';
-
   } else if ( isChannelController(status) ) {
     //knob or button
     if ( withinRange(data1, ranges.lowKnob, ranges.highKnob )){
-      msg += 'Knob: ';
+      msg += 'Knob: ' + data2 + ' ';
     } else if ( withinRange(data1, ranges.lowSwitch, ranges.highSwitch ) ) {
-      msg += 'Switch: ';
-      for ( var i in cc ){
-        if ( checkControl( cc[i][0], cc[i][1], status, data1 ) ){
-          msg += i;
-          cc[i][2]();
-        }
-      }
+      msg += 'Switch: ' ;
     } else if ( withinRange( data1, ranges.lowPad, ranges.highPad )){
       msg += 'Pad: ';
-      for ( var i in cc ){
-        if ( typeof cc[i] === "object" ){
-          for (var j in cc[i] ){
-            if ( checkControl(cc[i][j][0], cc[i][j][1], status, data1)) {
-              msg += i + " | " + j;
-              cc[i][j][2]();
-            }
-          }
-        }
-      }
+    }
+
+    // status == channel, data == cc
+    fun = ccs[status][data1];
+    msg += fun[1];
+
+    if (typeof fun[0] == "object"){
+      //handle knobs
+      fun[0][data2]();
+    } else {
+      // do the function
+      fun[0]();
     }
   }
 
-
-  printMidi(status, data1, data2);
   log(msg);
 }
 
-
-//does this match the table
-function checkControl(channel, msg, status, data1){
-  return ( channel == status.toString(10) && msg == data1 );
-}
-
-function log(msg) {
-  for (var i = 0, l = arguments.length; i < l; i++) {
-    host.println(arguments[i]);
-  }
-}
-
-function alert(msg) {
-  host.showPopupNotification(msg);
-}
 
 function onSysex(data) {
   log(data);
