@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <title>A Basic Midi Programming Introduction</title>
+        <meta name="viewport" content="width=device-width">
+
+        <!-- syntax highlighting CSS -->
+        <link rel="stylesheet" href="/css/syntax.css">
+
+        <!-- Custom CSS -->
+        <link rel="stylesheet" href="/css/main.css">
+
+    </head>
+    <body>
+
+        <div class="site">
+          <div class="header">
+            <h1 class="title"><a href="/">Adventures Programming BitWig API</a></h1>
+            <nav>
+            <a href="/">home</a>
+          </nav>
+          </div>
+
+          <div class="post">
+<h2>A Basic Midi Programming Introduction</h2>
+<p class="meta">07 Apr 2014</p>
+<p>Two useful resources to peruse alongside this entry</p>
+
+<p><a href="http://www.midi.org/techspecs/midimessages.php">Midi Specifications</a></p>
+
+<p><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Bitwise_Operators">Bitwise Operators</a></p>
+
+<p>It&#39;s easy to take MIDI for granted. It&#39;s been around for over 30 years, and it&#39;s still a standard in modern equipment. There are not many protocol + hardware implementations that have a third of that lifespan.</p>
+
+<p>Midi messages are divided into three bytes ( 8 sets of binary bits ), convention divides these into, Status, Data 1 and Data 2.</p>
+
+<p>Status is the message type, note on, note off, aftertouch, cc change, program change, pitch bend, etc. Status also contains information about which channel a particular midi message is directed at.</p>
+
+<p>Data 1 is the note on the keyboard, starting at 0 (C-1) and ending at 127 (G8). Data 1 is also the control channel number, which differs from the MIDI Channel, it numbers from 0 - 119. These are often referred to as <code>CCs</code>.</p>
+
+<p>Data 2 is devoted to velocity information and control channel values, with a few exceptions.</p>
+
+<p>A Note On message has the byte group of <code>0x90</code>, meaning everthing from <code>0x90</code> to <code>0x9F</code> is considered a Note On, the second part of the byte determines the channel.</p>
+
+<p>In <code>midi.js</code> you can see</p>
+
+<p><code>function isNoteOn(status) { return (status &amp; 0xF0) == 0x90; }</code></p>
+
+<p>The <code>&amp;</code> is an example of a bitwise operator, and basically says, &#39;what group is the first part of this byte in&#39;. Look at the link above to learn exactly what is going on here. What you need to know is that these helpers are there to give you the tools necessary to sort your midi messages.</p>
+
+<p><code>function MIDIChannel(status) { return status &amp; 0xF; }</code></p>
+
+<p>Similiarly, this function returns the Midi Channel of a given status by returning the right most byte.</p>
+
+<p>Control Channels are how buttons, sliders and knobs are utilized. Buttons send 0 or 127 for on or off, respectively, and knobs send a range of values from 0-127, depending on resolution, which is set in your controller software. I prefer a higher resolution for easier manipulation, but your utility may vary.</p>
+
+</div>
+
+
+          <div class="footer">
+              <img src="/img/grid_abstract.png">
+            <div class="contact">
+              <p>
+                Sean Canton<br />
+                JavaScript Developer<br/>
+                Musician<br />
+                Based in Miami, FL
+              </p>
+            </div>
+            <div>
+              <p>
+                <a href="https://twitter.com/yourusername">twitter.com/seancanton</a><br />
+                <a href="https://github.com/yourusername">github.com/eighteyes</a><br />
+                <a href="https://soundcloud.com/a-listcat">
+                soundcloud.com/a-listcat</a><br/>
+                <span style="font-size:smaller">
+                Made with <3 and <a href="http://jekyllrb.com/">Jekyll</a><br/><a href="http://8isc.com">Eight Eyes Creations</a></span>
+              </p>
+            </div>
+          </div>
+        </div>
+
+    </body>
+</html>

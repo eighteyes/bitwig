@@ -55,10 +55,14 @@
 <p>Examine midi.js for a ton of helper functions to assist in categorizing and creating MIDI messages. In case you&#39;re curious <code>(status &amp; 0xf0)</code> is a way to check the hex code for each channel and find what category it lands in.</p>
 
 <ul>
-<li><code>MIDIChannel(status)</code> returns the channel of the MIDI message.</li>
+<li><code>MIDIChannel(status)</code> returns the channel of a given MIDI message.</li>
 </ul>
 
-<p>I prefer the following log(), which handles multiple parameters.</p>
+<h2>Custom Utility Functions</h2>
+
+<p>I made these to make my own development process easier, mostly to ease the migration from JS for web development.</p>
+
+<p>log(), which handles multiple parameters.</p>
 
 <div class="highlight"><pre><code class="javascript"><span class="kd">function</span> <span class="nx">log</span><span class="p">(</span><span class="nx">msg</span><span class="p">)</span> <span class="p">{</span>
   <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="nx">l</span> <span class="o">=</span> <span class="nx">arguments</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">l</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
@@ -67,10 +71,17 @@
 <span class="p">}</span>
 </code></pre></div>
 
-<p>Also alert(), to have messages show in a fading popup.</p>
+<p>alert(), to have messages show in a fading popup.</p>
 
 <div class="highlight"><pre><code class="javascript"><span class="kd">function</span> <span class="nx">alert</span><span class="p">(</span><span class="nx">msg</span><span class="p">)</span> <span class="p">{</span>
   <span class="nx">host</span><span class="p">.</span><span class="nx">showPopupNotification</span><span class="p">(</span><span class="nx">msg</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p>everyone&#39;s favorite, setInterval(), with optional args.</p>
+
+<div class="highlight"><pre><code class="javascript"><span class="kd">function</span> <span class="nx">setInterval</span><span class="p">(</span><span class="nx">cb</span><span class="p">,</span> <span class="nx">args</span><span class="p">,</span> <span class="nx">delay</span><span class="p">){</span>
+  <span class="nx">host</span><span class="p">.</span><span class="nx">scheduleTask</span><span class="p">(</span><span class="nx">cb</span><span class="p">,</span> <span class="nx">args</span><span class="p">,</span> <span class="nx">delay</span><span class="p">);</span>
 <span class="p">}</span>
 </code></pre></div>
 
@@ -94,7 +105,7 @@
                 <a href="https://soundcloud.com/a-listcat">
                 soundcloud.com/a-listcat</a><br/>
                 <span style="font-size:smaller">
-                Made with <3 and <a href="http://jekyllrb.com/">Jekyll</a> by <a href="http://8isc.com">Eight Eyes Creations</a></span>
+                Made with <3 and <a href="http://jekyllrb.com/">Jekyll</a><br/><a href="http://8isc.com">Eight Eyes Creations</a></span>
               </p>
             </div>
           </div>

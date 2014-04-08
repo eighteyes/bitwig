@@ -29,9 +29,14 @@ These are helpful to reference occasionally when developing your driver.
 
 Examine midi.js for a ton of helper functions to assist in categorizing and creating MIDI messages. In case you're curious `(status & 0xf0)` is a way to check the hex code for each channel and find what category it lands in.
 
-* `MIDIChannel(status)` returns the channel of the MIDI message.
+* `MIDIChannel(status)` returns the channel of a given MIDI message.
 
-I prefer the following log(), which handles multiple parameters.
+
+## Custom Utility Functions
+
+I made these to make my own development process easier, mostly to ease the migration from JS for web development.
+
+log(), which handles multiple parameters.
 
 {% highlight javascript %}
 function log(msg) {
@@ -41,7 +46,7 @@ function log(msg) {
 }
 {% endhighlight %}
 
-Also alert(), to have messages show in a fading popup.
+alert(), to have messages show in a fading popup.
 
 {% highlight javascript %}
 function alert(msg) {
@@ -49,7 +54,7 @@ function alert(msg) {
 }
 {% endhighlight %}
 
-Of course, the perennial favorite, setInterval, with optional args.
+everyone's favorite, setInterval(), with optional args.
 
 {% highlight javascript %}
 function setInterval(cb, args, delay){

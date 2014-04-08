@@ -1,3 +1,4 @@
 name: Adventures Programming BitWig API
 markdown: redcarpet
 pygments: true
+exclude: [bw-ni-maschine, fluff, maschine, touchosc]
