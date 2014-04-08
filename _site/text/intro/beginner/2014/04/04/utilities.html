@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <title>Included Utilities & Language Capabilities</title>
+        <meta name="viewport" content="width=device-width">
+
+        <!-- syntax highlighting CSS -->
+        <link rel="stylesheet" href="/css/syntax.css">
+
+        <!-- Custom CSS -->
+        <link rel="stylesheet" href="/css/main.css">
+
+    </head>
+    <body>
+
+        <div class="site">
+          <div class="header">
+            <h1 class="title"><a href="/">Adventures Programming BitWig API</a></h1>
+            <nav>
+            <a href="/">home</a>
+          </nav>
+          </div>
+
+          <div class="post">
+<h2>Included Utilities & Language Capabilities</h2>
+<p class="meta">04 Apr 2014</p>
+<p>Just as important as learning the BitWig API, is learning how to use the EMCAScript 3 implementation of JavaScript available in BitWig.</p>
+
+<p>This is important, because some of the advanced constructs available in modern browsers are not available in BitWig. As well, certain aspects of the language might be confusing for those of us steeped in web development.</p>
+
+<ul>
+<li>Variable declarations in functions are scoped globally.</li>
+<li>Array map, reduce, forEach, filter are not available.</li>
+<li>Object meta-data control.</li>
+</ul>
+
+<p>Most of these are fairly esoteric, but good to be aware of.</p>
+
+<p>Looking through the <code>api</code> folder, we see api_v1.js, midi.js, sysex.js and utils.js.</p>
+
+<p>These are helpful to reference occasionally when developing your driver.</p>
+
+<ul>
+<li><code>println()</code> Outputs to console.</li>
+<li><code>withinRange(val, low, high)</code> low &lt; val &lt; high shortcut</li>
+<li><code>makeIndexedFunction(index, fn)</code> use in iterators to pass different variables to a event callback. you can see examples used when assigning events to track controls. This is done because each callback needs to be instantiated as a unique object when the listener is made. Otherwise the only parameters that would be passed to all of them would be the last one assigned.</li>
+<li><code>dump()</code> see the output of what an object contains, or what methods a bitwig built in has</li>
+<li><code>forceLength(length, padding)</code> for hardware labels where a certain length string is expected</li>
+<li><code>String.repeat(number, delimiter)</code> repeats a string a <code>number</code> of times with <code>delimiter</code> between</li>
+<li><code>printMidi(status, data1, data2)</code> very handy to throw on your midi handler</li>
+</ul>
+
+<p>Examine midi.js for a ton of helper functions to assist in categorizing and creating MIDI messages. In case you&#39;re curious <code>(status &amp; 0xf0)</code> is a way to check the hex code for each channel and find what category it lands in.</p>
+
+<ul>
+<li><code>MIDIChannel(status)</code> returns the channel of the MIDI message.</li>
+</ul>
+
+<p>I prefer the following log(), which handles multiple parameters.</p>
+
+<div class="highlight"><pre><code class="javascript"><span class="kd">function</span> <span class="nx">log</span><span class="p">(</span><span class="nx">msg</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="nx">l</span> <span class="o">=</span> <span class="nx">arguments</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">l</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">host</span><span class="p">.</span><span class="nx">println</span><span class="p">(</span><span class="nx">arguments</span><span class="p">[</span><span class="nx">i</span><span class="p">]);</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p>Also alert(), to have messages show in a fading popup.</p>
+
+<div class="highlight"><pre><code class="javascript"><span class="kd">function</span> <span class="nx">alert</span><span class="p">(</span><span class="nx">msg</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">host</span><span class="p">.</span><span class="nx">showPopupNotification</span><span class="p">(</span><span class="nx">msg</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div>
+
+</div>
+
+
+          <div class="footer">
+              <img src="/img/grid_abstract.png">
+            <div class="contact">
+              <p>
+                Sean Canton<br />
+                JavaScript Developer<br/>
+                Musician<br />
+                Based in Miami, FL
+              </p>
+            </div>
+            <div>
+              <p>
+                <a href="https://twitter.com/yourusername">twitter.com/seancanton</a><br />
+                <a href="https://github.com/yourusername">github.com/eighteyes</a><br />
+                <a href="https://soundcloud.com/a-listcat">
+                soundcloud.com/a-listcat</a><br/>
+                <span style="font-size:smaller">
+                Made with <3 and <a href="http://jekyllrb.com/">Jekyll</a> by <a href="http://8isc.com">Eight Eyes Creations</a></span>
+              </p>
+            </div>
+          </div>
+        </div>
+
+    </body>
+</html>

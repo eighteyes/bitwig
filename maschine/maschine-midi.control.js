@@ -1,10 +1,11 @@
-var controls, application, transport;
 loadAPI(1);
 load('utils.js');
 
 host.defineController("Generic", "Maschine Midi", "1.0", "E18947B2-AD95-4CA1-9C40-C66DB269A9BA");
 host.defineMidiPorts(1, 1);
 host.addDeviceNameBasedDiscoveryPair(["Maschine Controller Virtual Input"], ["Maschine Controller Virtual Output"]);
+
+var controls, application, transport;
 
 var ranges = {
   lowKnob: 14,
@@ -153,6 +154,10 @@ function init() {
   controls = host.createUserControls(8);
   application = host.createApplication();
   transport = host.createTransport();
+
+  cursorDevice = host.createCursorDeviceSection(8);
+  cursorTrack = host.createCursorTrackSection(3, 0);
+  primaryInstrument = cursorTrack.getPrimaryInstrument();
 //
   // log(controls, application, transport);
   // spy(host, controls, application, transport);
