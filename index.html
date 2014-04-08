@@ -1,0 +1,27 @@
+---
+layout: default
+title: Bitwig API Programming - Home
+---
+
+<div id="home">
+  <div class="highlight-box">
+    <h2>Welcome</h2>
+    It is my intention to publish what I learn from experimenting with the BitWig API here. You can contact me through GitHub, or via another avenue. I'm easy to find, and I am inspired by your feedback.
+  </div>
+
+  <aside>
+    <h2>
+      Useful Reference Materials
+    </h2>
+<a href="http://www.midi.org/techspecs/midimessages.php">MIDI Specification</a>
+<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Bitwise_Operators">Bitwise Operators</a>
+
+  </aside>
+  <h1> Contents </h1>
+  <ul class="posts">
+    {% for post in site.posts %}
+      <p><span>{{ post.date | date_to_string }}</span> &raquo; <a href="{{ post.url }}">{{ post.title }}</a></p>
+    {% endfor %}
+  </ul>
+
+</div>
