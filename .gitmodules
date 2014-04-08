@@ -1,3 +1,3 @@
-[submodule "bw-ni-maschine"]
-        path = bw-ni-maschine/
-        url = git@github.com:eighteyes/ni-maschine.git
+[submodule "ni-maschine"]
+	path = ni-maschine
+	url = git@github.com:eighteyes/ni-maschine.git
