@@ -26,7 +26,7 @@ would translate a note of velocity 50 into a velocity of 127. This way, a keyboa
 
 I use the worlds greatest Piano Modelling software [PianoTEQ](https://www.pianoteq.com/) to come up with the following velocity curve.
 
-![Velocity Curve]({{ site.url }}/img/velocity_curve.png)
+![Velocity Curve]({{ site.baseurl }}/img/velocity_curve.png)
 
 Exported from the program, `Velocity = [0, 1, 46, 50, 62, 98, 127; 0, 1, 32, 64, 96, 127, 127]` gives a nice starting place to do a linear interpolation. The first set of numbers is the input velocities, and the second set, the output. [Linear interpolation](http://en.wikipedia.org/wiki/Linear_interpolation) is a geometry technique to find any point on a line between two points.
 
