@@ -17,7 +17,7 @@ The simplest driver is the `Generic Midi Keyboard`. In the init() here you see:
 host.getMidiInPort(0).createNoteInput("MIDI Keyboard");
 {% endhighlight %}
 
- "Midi Keyboard" is available as an input to your tracks within the application.
+ "Midi Keyboard" becomes available as an input to your tracks within the application. `createNoteInput` OVERRIDES the `setMidiCallback` below, so your note data will not be passed to `onMidi` if it is handled here.
 
  All the MIDI note information is handled at this point, and for implementing a basic MIDI keyboard, this is all we need. The rest of the script handles controller (CC) data, knobs, faders and the like. Not bad eh?
 
@@ -27,7 +27,7 @@ host.getMidiInPort(0).setMidiCallback(onMidi);
 
 Sets up the callback for incoming MIDI information.
 
-Callbacks are basically using functions as objects, and being setup to be fired off. This is an equivalent paradigm to `$(elem).on('click', handleElemClick)` in jQuery or `EventTarget.addEventListener( 'click', handleClick)` in stock JavaScript. So, `on('midinote', onMidi)`.
+Callbacks are basically using functions as objects, and being setup to be fired off as a listener for an event. This is an equivalent paradigm to `$(elem).on('click', handleElemClick)` in jQuery or `EventTarget.addEventListener( 'click', handleClick)` in stock JavaScript. So, `on('midinote', onMidi)`.
 
 `onMidi` is defined later in the document with `function onMidi(status, data1, data2)` and can be used like a variable in methods that support it. It may be helpful to think of this as `var onMidi = function(status, data1, data2)` as they are equivalent.
 

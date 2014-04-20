@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <title>Remapping Keyboard Velocity</title>
+        <meta name="viewport" content="width=device-width">
+
+        <!-- syntax highlighting CSS -->
+        <link rel="stylesheet" href="/css/syntax.css">
+
+        <!-- Custom CSS -->
+        <link rel="stylesheet" href="/css/main.css">
+
+    </head>
+    <body>
+
+        <div class="site">
+          <div class="header">
+            <h1 class="title"><a href="">Adventures Programming BitWig API</a></h1>
+            <nav>
+            <a href="">home</a>
+          </nav>
+          </div>
+
+          <div class="post">
+<h2>Remapping Keyboard Velocity</h2>
+<p class="meta">19 Apr 2014</p>
+<p>As a musician, one of the first things I need to address is the &#39;feel&#39; of my instruments. I&#39;m sure that down the line, there will be a sweet device for this sort of transformation, but for now, we can do it entirely within Bitwig API.</p>
+
+<p>Revisiting <a href="/exploring.html">Generic Keyboard Implementation</a>, we have <code>host.getMidiInPort(0).createNoteInput(&quot;MIDI Keyboard&quot;);</code> inside <code>init()</code>. This function returns an object of type <code>NoteInput</code> which has the method <code>setVelocityTranslationTable()</code>.</p>
+
+<div class="highlight"><pre><code class="javascript"><span class="kd">var</span> <span class="nx">noteInput</span> <span class="o">=</span> <span class="nx">host</span><span class="p">.</span><span class="nx">getMidiInPort</span><span class="p">(</span><span class="mi">0</span><span class="p">).</span><span class="nx">createNoteInput</span><span class="p">(</span><span class="s2">&quot;MIDI Keyboard&quot;</span><span class="p">);</span>
+<span class="nx">noteInput</span><span class="p">.</span><span class="nx">setVelocityTranslationTable</span><span class="p">(</span> <span class="nx">table</span> <span class="p">);</span>
+</code></pre></div>
+
+<p>This method takes an 128 length array, or a hash table, transforming the index of the array into the values of the array as the translation being performed.</p>
+
+<p>So, for example:</p>
+
+<div class="highlight"><pre><code class="javascript"><span class="kd">var</span> <span class="nx">table</span> <span class="o">=</span> <span class="p">[];</span>
+<span class="nx">table</span><span class="p">[</span><span class="mi">50</span><span class="p">]</span> <span class="o">=</span> <span class="mi">127</span><span class="p">;</span>
+</code></pre></div>
+
+<p>would translate a note of velocity 50 into a velocity of 127. This way, a keyboard, like mine, which produces a narrow range of output, generally from 40 to 75, can be expanded to produce the full range of velocities accepted by software instruments. However, BitWig requires a table of 128 points to match every velocity a keyboard can produce with an appropriate transformed value, so we must start with a set of numbers to represent this transformation.</p>
+
+<p>I use the worlds greatest Piano Modelling software <a href="https://www.pianoteq.com/">PianoTEQ</a> to come up with the following velocity curve.</p>
+
+<p><img src="/img/velocity_curve.png" alt="Velocity Curve"></p>
+
+<p>Exported from the program, <code>Velocity = [0, 1, 46, 50, 62, 98, 127; 0, 1, 32, 64, 96, 127, 127]</code> gives a nice starting place to do a linear interpolation. The first set of numbers is the input velocities, and the second set, the output. <a href="http://en.wikipedia.org/wiki/Linear_interpolation">Linear interpolation</a> is a geometry technique to find any point on a line between two points.</p>
+
+<div class="highlight"><pre><code class="javascript"><span class="lineno"> 1</span>   <span class="kd">var</span> <span class="nx">noteInput</span> <span class="o">=</span> <span class="nx">host</span><span class="p">.</span><span class="nx">getMidiInPort</span><span class="p">(</span><span class="mi">0</span><span class="p">).</span><span class="nx">createNoteInput</span><span class="p">(</span><span class="s1">&#39;Maschine Midi In&#39;</span><span class="p">);</span>
+<span class="lineno"> 2</span> 
+<span class="lineno"> 3</span>   <span class="nx">inputVel</span> <span class="o">=</span> <span class="p">[</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">46</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">62</span><span class="p">,</span> <span class="mi">98</span><span class="p">,</span> <span class="mi">127</span> <span class="p">];</span> <span class="c1">// x</span>
+<span class="lineno"> 4</span>   <span class="nx">transVel</span> <span class="o">=</span> <span class="p">[</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">32</span><span class="p">,</span> <span class="mi">64</span><span class="p">,</span> <span class="mi">96</span><span class="p">,</span> <span class="mi">127</span><span class="p">,</span> <span class="mi">127</span> <span class="p">];</span> <span class="c1">// y</span>
+<span class="lineno"> 5</span> 
+<span class="lineno"> 6</span>   <span class="kd">var</span> <span class="nx">output</span> <span class="o">=</span> <span class="p">[];</span>
+<span class="lineno"> 7</span>   <span class="k">for</span> <span class="p">(</span> <span class="nx">slope</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="mi">128</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">){</span>
+<span class="lineno"> 8</span>     <span class="c1">//Y = Y1 + ( ( Y2 - Y1) ( X - X1 ) / ( X2 - X1) )</span>
+<span class="lineno"> 9</span>     <span class="nx">y</span> <span class="o">=</span> <span class="nx">transVel</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span>
+<span class="lineno">10</span>       <span class="p">(</span> <span class="p">((</span><span class="nx">transVel</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="nx">transVel</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">*</span> <span class="p">(</span> <span class="nx">i</span> <span class="o">-</span> <span class="nx">inputVel</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="p">))</span> <span class="o">/</span>
+<span class="lineno">11</span>       <span class="p">(</span><span class="nx">inputVel</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="nx">inputVel</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+<span class="lineno">12</span>     <span class="p">);</span>
+<span class="lineno">13</span>     <span class="nx">output</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="o">=</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">min</span><span class="p">(</span><span class="nb">Math</span><span class="p">.</span><span class="nx">round</span><span class="p">(</span><span class="nx">y</span><span class="p">),</span> <span class="mi">127</span><span class="p">);</span>
+<span class="lineno">14</span>     <span class="k">if</span> <span class="p">(</span> <span class="nx">inputVel</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&lt;</span> <span class="nx">i</span> <span class="p">){</span>
+<span class="lineno">15</span>       <span class="nx">transVel</span><span class="p">.</span><span class="nx">shift</span><span class="p">();</span>
+<span class="lineno">16</span>       <span class="nx">inputVel</span><span class="p">.</span><span class="nx">shift</span><span class="p">();</span>
+<span class="lineno">17</span>     <span class="p">}</span>
+<span class="lineno">18</span>   <span class="p">}</span>
+<span class="lineno">19</span> 
+<span class="lineno">20</span>   <span class="nx">noteInput</span><span class="p">.</span><span class="nx">setVelocityTranslationTable</span><span class="p">(</span><span class="nx">output</span><span class="p">);</span>
+</code></pre></div>
+
+<p>We iterate through <code>inputVel</code> and <code>transVel</code> by shifting each array every time the x or <code>i</code> reaches the next value of <code>inputVel</code>. This shift makes the operation on lines 9-13 apply again, with the new values at [0] of each array.</p>
+
+<p>I would highly recommend you just copy and paste this code into your application and change as you see fit, but this is how it&#39;s done.</p>
+
+</div>
+
+
+          <div class="footer">
+              <img src="/img/grid_abstract.png">
+            <div class="contact">
+              <p>
+                Sean Canton<br />
+                JavaScript Developer<br/>
+                Musician<br />
+                Based in Miami, FL
+              </p>
+            </div>
+            <div>
+              <p>
+                <a href="https://twitter.com/yourusername">twitter.com/seancanton</a><br />
+                <a href="https://github.com/yourusername">github.com/eighteyes</a><br />
+                <a href="https://soundcloud.com/a-listcat">
+                soundcloud.com/a-listcat</a><br/>
+                <span style="font-size:smaller">
+                Made with <3 and <a href="http://jekyllrb.com/">Jekyll</a><br/><a href="http://8isc.com">Eight Eyes Creations</a></span>
+              </p>
+            </div>
+          </div>
+        </div>
+
+  <script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-2801382-6', 'eighteyes.github.io');
+  ga('send', 'pageview');
+
+</script>
+    </body>
+</html>
